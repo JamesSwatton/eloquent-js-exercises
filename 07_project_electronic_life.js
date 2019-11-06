@@ -29,9 +29,27 @@ Grid.prototype.set = function(vector, value) {
 };
 // GRID TEST
 // ---------
-const grid = new Grid(5, 5);
-console.log(grid.get(new Vector(1, 1)));
-grid.set(new Vector(1, 1), "X");
-console.log(grid.get(new Vector(1, 1)));
+// const grid = new Grid(5, 5);
+// console.log(grid.get(new Vector(1, 1)));
+// grid.set(new Vector(1, 1), "X");
+// console.log(grid.get(new Vector(1, 1)));
 
 
+function elementFromChar(legend, ch) {
+    if (ch == " ")
+        return null;
+    const element = new legend[ch]();
+    element.originChar = ch;
+    return element;
+}
+
+function World(map, legend) {
+    this.grid = new Grid(map[0].length, map.length);
+    this.legend = legend;
+
+    map.forEach((line, y) => {
+        for (let x = 0; x < line.length; x++)
+            this.grid.set(new Vector(x, y),
+                          elementFromChar(legend, line[x]));
+    });
+}
