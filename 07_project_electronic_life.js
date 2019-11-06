@@ -1,3 +1,19 @@
+const plan = [
+    "###############################",
+    "#                             #",
+    "#         #        #  o       #",
+    "#                             #",
+    "#            #######          #",
+    "##           #   ###    ##    #",
+    "###                #     #    #",
+    "#            #    ###         #",
+    "#    ###                 #    #",
+    "#     ##      o               #",
+    "# o    #          o      ##   #",
+    "#      #                      #",
+    "###############################"
+];
+
 function Vector(x, y) {
     this.x = x;
     this.y = y;
@@ -62,7 +78,7 @@ function World(map, legend) {
     });
 }
 World.prototype.toString = function() {
-    const output = "";
+    let output = "";
 
     for (let y = 0; y < this.grid.height; y++) {
         for (let x = 0; x < this.grid.width; x++) {
@@ -73,3 +89,12 @@ World.prototype.toString = function() {
     }
     return output;
 };
+// WORLD TEST
+// ----------
+// function Wall(){};
+// function BouncingCritter() {};
+
+// const world = new World(plan,
+//                         {"#": Wall,
+//                          "o": BouncingCritter});
+// console.log(world.toString());
