@@ -43,6 +43,14 @@ function elementFromChar(legend, ch) {
     return element;
 }
 
+function charFromElement(element) {
+    if (element == null) {
+        return " ";
+    } else {
+        return element.originChar;
+    }
+}
+
 function World(map, legend) {
     this.grid = new Grid(map[0].length, map.length);
     this.legend = legend;
@@ -53,3 +61,15 @@ function World(map, legend) {
                           elementFromChar(legend, line[x]));
     });
 }
+World.prototype.toString = function() {
+    const output = "";
+
+    for (let y = 0; y < this.grid.height; y++) {
+        for (let x = 0; x < this.grid.width; x++) {
+            const element = this.grid.get(new Vector(x, y));
+            output += charFromElement(element);
+        }
+        output += "\n";
+    }
+    return output;
+};
