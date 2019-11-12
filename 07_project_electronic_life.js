@@ -167,3 +167,17 @@ View.prototype.look = function(dir) {
         return "#";
     }
 };
+View.prototype.findAll = function(ch) {
+    let found = [];
+    for (let dir in directions) {
+        if (this.loog(dir) == ch) {
+            found.push(dir);
+        }
+    }
+    return found;
+};
+View.prototype.find = function(ch) {
+    const found = this.findAll(ch);
+    if (found.length == 0) return null;
+    return randomElement(found);
+}
