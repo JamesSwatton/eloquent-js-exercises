@@ -14,6 +14,17 @@ const plan = [
     "###############################"
 ];
 
+const directions = {
+    "n": new Vector(0, -1),
+    "ne": new Vector(1, -1),
+    "e": new Vector(1, 0),
+    "se": new Vector(1, 1),
+    "s": new Vector(0, 1),
+    "sw": new Vector(-1, 1),
+    "w": new Vector(-1, 0),
+    "nw": new Vector(-1, -1)
+};
+
 function Vector(x, y) {
     this.x = x;
     this.y = y;
@@ -68,12 +79,13 @@ function charFromElement(element) {
 }
 
 function World(map, legend) {
-    this.grid = new Grid(map[0].length, map.length);
+    const grid =  new Grid(map[0].length, map.length);
+    this.grid = grid;
     this.legend = legend;
 
     map.forEach((line, y) => {
         for (let x = 0; x < line.length; x++)
-            this.grid.set(new Vector(x, y),
+            grid.set(new Vector(x, y),
                           elementFromChar(legend, line[x]));
     });
 }
@@ -89,6 +101,34 @@ World.prototype.toString = function() {
     }
     return output;
 };
+World.prototype.turn = function () {
+    let acted = [];
+
+    this.grid.forEach((critter, vector) => {
+        if (critter.act && acted.indexOf(critter) == -1) {
+            acted.push(critter);
+            this.letAct(critter, vector);
+        }
+    }, this);
+};
+World.prototype.letAct = function(critter, vector) {
+    const action = critter.act(new View(this, vector));
+    if (action && action.type == "move") {
+        const dest = this.checkDestination(action, vector);
+        if (dest && this.grid.get(dest) == null) {
+            this.grid.set(vector, null);
+            this.grid.set(dest, critter);
+        }
+    }
+};
+World.prototype.checkDestination = function(action, vector) {
+    if (directions.hasOwnProperty(action.direction)) {
+        const dest = vector.plus(directions[action.direction]);
+        if (this.grid.isInside(dest))
+            return dest;
+    }
+};
+
 // WORLD TEST
 // ----------
 // function Wall(){};
@@ -98,3 +138,5 @@ World.prototype.toString = function() {
 //                         {"#": Wall,
 //                          "o": BouncingCritter});
 // console.log(world.toString());
+
+
