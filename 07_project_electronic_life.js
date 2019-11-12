@@ -38,6 +38,21 @@ Vector.prototype.plus = function(other) {
 // const vecB = new Vector(3, 2);
 // console.log(vecA.plus(vecB));
 
+function randomElement(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+const directionNames = "n ne e se s sw w nw".split(" ");
+
+function BouncingCritter() {
+    this.direction = randomElement(directionNames);
+};
+BouncingCritter.prototype.act = function(view) {
+    if (view.look(this.direction) != " ") {
+        this.direction = view.find(" ") || "s";
+    }
+    return {type: "move", direction: this.direction};
+};
 
 function Grid(width, height) {
     this.space = new Array(width * height);
@@ -140,3 +155,15 @@ World.prototype.checkDestination = function(action, vector) {
 // console.log(world.toString());
 
 
+function View(world, vector) {
+    this.world = world;
+    this.vector = vector;
+}
+View.prototype.look = function(dir) {
+    const target = this.vector.plus(directions[dir]);
+    if (this.world.grid.isInside(target)) {
+        return charFromElement(this.world.grid.get(target));
+    } else {
+        return "#";
+    }
+};
